@@ -9,11 +9,14 @@ import (
 	"time"
 )
 
+//先頭に３つ0が続くように設定
+const MINING_DIFICULTY = 3
+
 //ブロックのストラクトを定義
 type Block struct {
+	timestamp    int64
 	nonce        int
 	previousHash [32]byte
-	timestamp    int64
 	transactions []*Transaction
 }
 
@@ -108,15 +111,44 @@ func (bc *Blockchain) Print() {
 }
 
 //トランザクション追加のメソッド
-func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32)  {
+func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32) {
 	t := NewTransaction(sender, recipient, value)
 	bc.transactionPool = append(bc.transactionPool, t)
+}
+
+//先頭三文字がゼロになるかどうかを判定するメソッド
+func (bc *Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions []*Transaction, difficulty int) bool {
+	zeros := strings.Repeat("0", difficulty)
+	guessBlock := Block{0, nonce, previousHash, transactions}
+	guessHashStr := fmt.Sprintf("%x", guessBlock.Hash())
+	//fmt.Println(guessHashStr)
+	return guessHashStr[:difficulty] == zeros
+}
+
+func (bc *Blockchain) ProofOfWork() int {
+	transactions := bc.CopyTransactionPool()
+	previousHash := bc.LastBlock().Hash()
+	//nonceの初期化
+	nonce := 0
+	//ValidProofがtrueになるまでループで回す
+	for !bc.ValidProof(nonce, previousHash, transactions, MINING_DIFICULTY) {
+		nonce += 1
+	}
+	return nonce
+}
+
+//トランザクションプールをコピー
+func (bc *Blockchain) CopyTransactionPool() []*Transaction {
+	transactions := make([]*Transaction, 0)
+	for _, t := range bc.transactionPool {
+		transactions = append(transactions, NewTransaction(t.senderBlockchainAddress, t.recipientBlockchainAddress, t.value))
+	}
+	return transactions
 }
 
 //sha256でハッシュ化
 func (b *Block) Hash() [32]byte {
 	m, _ := json.Marshal(b)
-	fmt.Println(string(m))
 	return sha256.Sum256([]byte(m))
 }
 
@@ -147,10 +179,11 @@ func main() {
 
 	//直前のハッシュを利用して再度ハッシュ化
 	previousHash := blockChain.LastBlock().Hash()
-	blockChain.CreateBlock(5, previousHash)
+	nonce := blockChain.ProofOfWork()
+	blockChain.CreateBlock(nonce, previousHash)
 	blockChain.Print()
 
 	previousHash = blockChain.LastBlock().Hash()
-	blockChain.CreateBlock(2, previousHash)
+	blockChain.CreateBlock(nonce, previousHash)
 	blockChain.Print()
 }
