@@ -1,4 +1,4 @@
-package main
+package block
 
 import (
 	"crypto/sha256"
@@ -204,25 +204,25 @@ func (b *Block) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func init() {
-	log.SetPrefix("Blockchain")
-}
-func main() {
-	myBlockchainAddress := "my_blockchain_address"
-	blockChain := NewBlockchain(myBlockchainAddress)
-	blockChain.Print()
-
-	//AさんがBさんに1.0のvalueを送る
-	blockChain.AddTransaction("A", "B", 1.0)
-	//マイニング
-	blockChain.Mining()
-	blockChain.Print()
-
-	blockChain.AddTransaction("C", "D", 3.0)
-	blockChain.Mining()
-	blockChain.Print()
-
-	fmt.Printf("my %.1f\n", blockChain.CalculateTotalAmount("my_blockchain_address"))
-	fmt.Printf("A %.1f\n", blockChain.CalculateTotalAmount("B"))
-	fmt.Printf("C %.1f\n", blockChain.CalculateTotalAmount("D"))
-}
+//func init() {
+//	log.SetPrefix("Blockchain")
+//}
+//func main() {
+//	myBlockchainAddress := "my_blockchain_address"
+//	blockChain := NewBlockchain(myBlockchainAddress)
+//	blockChain.Print()
+//
+//	//AさんがBさんに1.0のvalueを送る
+//	blockChain.AddTransaction("A", "B", 1.0)
+//	//マイニング
+//	blockChain.Mining()
+//	blockChain.Print()
+//
+//	blockChain.AddTransaction("C", "D", 3.0)
+//	blockChain.Mining()
+//	blockChain.Print()
+//
+//	fmt.Printf("my %.1f\n", blockChain.CalculateTotalAmount("my_blockchain_address"))
+//	fmt.Printf("A %.1f\n", blockChain.CalculateTotalAmount("B"))
+//	fmt.Printf("C %.1f\n", blockChain.CalculateTotalAmount("D"))
+//}
