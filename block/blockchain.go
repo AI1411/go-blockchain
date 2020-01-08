@@ -1,6 +1,8 @@
 package block
 
 import (
+	"blockchain/utils"
+	"crypto/ecdsa"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
@@ -117,9 +119,34 @@ func (bc *Blockchain) Print() {
 }
 
 //トランザクション追加のメソッド
-func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32) {
+func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32, senderPublicKey *ecdsa.PublicKey, s *utils.Signature) bool {
 	t := NewTransaction(sender, recipient, value)
+
+	//送り手がMINING_SENDERの場合検証は必要ないのでそのままtrueを返す
+	if sender ==  MINING_SENDER {
 	bc.transactionPool = append(bc.transactionPool, t)
+	return true
+	}
+	//検証がtrueならプールに新しくトランザクションを追加する
+	if bc.VerifyTransactionSignature(senderPublicKey, s, t) {
+		//walletが足りない場合は送受信できない
+		//if bc.CalculateTotalAmount(sender) < value {
+		//	log.Println("ERROR: Not enough balance in a wallet")
+		//	return false
+		//}
+		bc.transactionPool = append(bc.transactionPool, t)
+		return true
+	} else {
+		log.Println("ERROR: Verify Transaction")
+	}
+	return false
+}
+
+//トランザクションの検証
+func (bc *Blockchain) VerifyTransactionSignature(senderPublicKey *ecdsa.PublicKey, s *utils.Signature, t *Transaction) bool {
+	m, _ := json.Marshal(t)
+	h := sha256.Sum256([]byte(m))
+	return ecdsa.Verify(senderPublicKey, h[:], s.R, s.S)
 }
 
 //先頭三文字がゼロになるかどうかを判定するメソッド
@@ -133,7 +160,7 @@ func (bc *Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions 
 
 //マイニング
 func (bc *Blockchain) Mining() bool {
-	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD)
+	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD, nil, nil)
 	//rewardが入った状態でproof of workをする
 	nonce := bc.ProofOfWork()
 	previousHash := bc.LastBlock().Hash()
