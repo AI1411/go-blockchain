@@ -10,7 +10,11 @@ import (
 )
 
 //先頭に３つ0が続くように設定
-const MINING_DIFICULTY = 3
+const (
+	MINING_DIFICULTY = 3
+	MINING_SENDER    = "THE BLOCKCHAIN"
+	MINING_REWARD    = 1.0
+)
 
 //ブロックのストラクトを定義
 type Block struct {
@@ -75,14 +79,16 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 
 //ブロックチェーンのストラクト作成
 type Blockchain struct {
-	transactionPool []*Transaction
-	chain           []*Block
+	transactionPool   []*Transaction
+	chain             []*Block
+	blockchainAddress string
 }
 
 //ブロックチェーンを新規作成
-func NewBlockchain() *Blockchain {
+func NewBlockchain(blockchainAddress string) *Blockchain {
 	b := &Block{}
 	bc := new(Blockchain)
+	bc.blockchainAddress = blockchainAddress
 	bc.CreateBlock(0, b.Hash())
 	return bc
 }
@@ -123,6 +129,18 @@ func (bc *Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions 
 	guessHashStr := fmt.Sprintf("%x", guessBlock.Hash())
 	//fmt.Println(guessHashStr)
 	return guessHashStr[:difficulty] == zeros
+}
+
+//マイニング
+func (bc *Blockchain) Mining() bool {
+	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD)
+	//rewardが入った状態でproof of workをする
+	nonce := bc.ProofOfWork()
+	previousHash := bc.LastBlock().Hash()
+	//nonceを含めて新しいブロックを生成する
+	bc.CreateBlock(nonce, previousHash)
+	log.Println("action=mining, status=success")
+	return true
 }
 
 func (bc *Blockchain) ProofOfWork() int {
@@ -171,19 +189,17 @@ func init() {
 	log.SetPrefix("Blockchain")
 }
 func main() {
-	blockChain := NewBlockchain()
+	myBlockchainAddress := "my_blockchain_address"
+	blockChain := NewBlockchain(myBlockchainAddress)
 	blockChain.Print()
 
 	//AさんがBさんに1.0のvalueを送る
 	blockChain.AddTransaction("A", "B", 1.0)
-
-	//直前のハッシュを利用して再度ハッシュ化
-	previousHash := blockChain.LastBlock().Hash()
-	nonce := blockChain.ProofOfWork()
-	blockChain.CreateBlock(nonce, previousHash)
+	//マイニング
+	blockChain.Mining()
 	blockChain.Print()
 
-	previousHash = blockChain.LastBlock().Hash()
-	blockChain.CreateBlock(nonce, previousHash)
+	blockChain.AddTransaction("C", "D", 3.0)
+	blockChain.Mining()
 	blockChain.Print()
 }
