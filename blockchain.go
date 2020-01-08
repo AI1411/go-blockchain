@@ -143,6 +143,25 @@ func (bc *Blockchain) Mining() bool {
 	return true
 }
 
+//valueの計算
+func (bc *Blockchain) CalculateTotalAmount(blockchainAddress string) float32 {
+	var totalAmount float32 = 0.0
+	for _, b := range bc.chain {
+		for _, t := range b.transactions {
+			value := t.value
+			//受取人だったらvalueが増える
+			if blockchainAddress == t.recipientBlockchainAddress {
+				totalAmount += value
+			}
+			//送り手だった場合valueが減る
+			if blockchainAddress == t.senderBlockchainAddress {
+				totalAmount -= value
+			}
+		}
+	}
+	return totalAmount
+}
+
 func (bc *Blockchain) ProofOfWork() int {
 	transactions := bc.CopyTransactionPool()
 	previousHash := bc.LastBlock().Hash()
@@ -202,4 +221,8 @@ func main() {
 	blockChain.AddTransaction("C", "D", 3.0)
 	blockChain.Mining()
 	blockChain.Print()
+
+	fmt.Printf("my %.1f\n", blockChain.CalculateTotalAmount("my_blockchain_address"))
+	fmt.Printf("A %.1f\n", blockChain.CalculateTotalAmount("B"))
+	fmt.Printf("C %.1f\n", blockChain.CalculateTotalAmount("D"))
 }
