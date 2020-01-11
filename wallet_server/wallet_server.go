@@ -3,6 +3,7 @@ package main
 import (
 	"blockchain/utils"
 	"blockchain/wallet"
+	"encoding/json"
 	"html/template"
 	"io"
 	"log"
@@ -61,7 +62,20 @@ func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
 func (ws *WalletServer) CreateTransaction(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodPost:
-		io.WriteString(w, string(utils.JsonStatus("success")))
+		decoder := json.NewDecoder(req.Body)
+		var t wallet.TransactionRequest
+		err := decoder.Decode(&t)
+		if err != nil {
+			log.Printf("Error: %v", err)
+			io.WriteString(w, string(utils.JsonStatus("success")))
+			return
+		}
+		if !t.Validate(){
+			log.Println("error: missing field(s)")
+			io.WriteString(w, string(utils.JsonStatus("fails")))
+			return
+		}
+
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println("Error: invalid http methods")
