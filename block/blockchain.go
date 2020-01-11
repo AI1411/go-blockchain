@@ -79,20 +79,45 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 	})
 }
 
+//jsonを上書き
+func (b *Block) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Timestamp    int64          `json:"timestamp"` //struct tag
+		Nance        int            `json:"nonce"`
+		PreviousHash string         `json:"previous_hash"`
+		Transactions []*Transaction `json:"transactions"`
+	}{
+		Timestamp:    b.timestamp,
+		Nance:        b.nonce,
+		PreviousHash: fmt.Sprintf("%v", b.previousHash),
+		Transactions: b.transactions,
+	})
+}
+
 //ブロックチェーンのストラクト作成
 type Blockchain struct {
 	transactionPool   []*Transaction
 	chain             []*Block
 	blockchainAddress string
+	port              uint16
 }
 
 //ブロックチェーンを新規作成
-func NewBlockchain(blockchainAddress string) *Blockchain {
+func NewBlockchain(blockchainAddress string, port uint16) *Blockchain {
 	b := &Block{}
 	bc := new(Blockchain)
 	bc.blockchainAddress = blockchainAddress
 	bc.CreateBlock(0, b.Hash())
+	bc.port = port
 	return bc
+}
+
+func (bc *Blockchain) MarshalJSON ()([]byte, error) {
+	return json.Marshal(struct {
+		Blocks []*Block `json:"chains"`
+	}{
+		Blocks: bc.chain,
+	})
 }
 
 //作成したブロックをプールに追加していく
@@ -123,9 +148,9 @@ func (bc *Blockchain) AddTransaction(sender string, recipient string, value floa
 	t := NewTransaction(sender, recipient, value)
 
 	//送り手がMINING_SENDERの場合検証は必要ないのでそのままtrueを返す
-	if sender ==  MINING_SENDER {
-	bc.transactionPool = append(bc.transactionPool, t)
-	return true
+	if sender == MINING_SENDER {
+		bc.transactionPool = append(bc.transactionPool, t)
+		return true
 	}
 	//検証がtrueならプールに新しくトランザクションを追加する
 	if bc.VerifyTransactionSignature(senderPublicKey, s, t) {
@@ -214,21 +239,6 @@ func (bc *Blockchain) CopyTransactionPool() []*Transaction {
 func (b *Block) Hash() [32]byte {
 	m, _ := json.Marshal(b)
 	return sha256.Sum256([]byte(m))
-}
-
-//jsonを上書き
-func (b *Block) MarshalJSON() ([]byte, error) {
-	return json.Marshal(struct {
-		Timestamp    int64          `json:"timestamp"` //struct tag
-		Nance        int            `json:"nonce"`
-		PreviousHash [32]byte       `json:"previous_hash"`
-		Transactions []*Transaction `json:"transactions"`
-	}{
-		Timestamp:    b.timestamp,
-		Nance:        b.nonce,
-		PreviousHash: b.previousHash,
-		Transactions: b.transactions,
-	})
 }
 
 //func init() {
