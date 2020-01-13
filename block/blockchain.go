@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -16,6 +17,7 @@ const (
 	MINING_DIFICULTY = 3
 	MINING_SENDER    = "THE BLOCKCHAIN"
 	MINING_REWARD    = 1.0
+	MINING_TIMER_SEC = 20
 )
 
 //ブロックのストラクトを定義
@@ -87,6 +89,7 @@ type Blockchain struct {
 	chain             []*Block
 	blockchainAddress string
 	port              uint16
+	mux               sync.Mutex
 }
 
 //ブロックチェーンを新規作成
@@ -185,6 +188,12 @@ func (bc *Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions 
 
 //マイニング
 func (bc *Blockchain) Mining() bool {
+	bc.mux.Lock()
+	defer bc.mux.Unlock()
+
+	if len(bc.transactionPool) == 0 {
+		return false
+	}
 	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD, nil, nil)
 	//rewardが入った状態でproof of workをする
 	nonce := bc.ProofOfWork()
@@ -193,6 +202,12 @@ func (bc *Blockchain) Mining() bool {
 	bc.CreateBlock(nonce, previousHash)
 	log.Println("action=mining, status=success")
 	return true
+}
+
+func (bc *Blockchain) StartMining() {
+	bc.Mining()
+	_ = time.AfterFunc(time.Second * MINING_TIMER_SEC, bc.StartMining)
+
 }
 
 //valueの計算
