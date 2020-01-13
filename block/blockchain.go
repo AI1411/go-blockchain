@@ -66,19 +66,6 @@ func (t *Transaction) Print() {
 	fmt.Printf(" value                          %.1f\n", t.value)
 }
 
-//jsonmarshalに変換
-func (t *Transaction) MarshalJSON() ([]byte, error) {
-	return json.Marshal(struct {
-		Sender    string  `json:"sender_blockchain_address"`
-		Recipient string  `json:"recipient_blockchain_address"`
-		Value     float32 `json:"value"`
-	}{
-		Sender:    t.senderBlockchainAddress,
-		Recipient: t.recipientBlockchainAddress,
-		Value:     t.value,
-	})
-}
-
 //jsonを上書き
 func (b *Block) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
@@ -112,7 +99,11 @@ func NewBlockchain(blockchainAddress string, port uint16) *Blockchain {
 	return bc
 }
 
-func (bc *Blockchain) MarshalJSON ()([]byte, error) {
+func (bc *Blockchain) TransactionPool() []*Transaction {
+	return bc.transactionPool
+}
+
+func (bc *Blockchain) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		Blocks []*Block `json:"chains"`
 	}{
@@ -143,8 +134,17 @@ func (bc *Blockchain) Print() {
 	fmt.Printf("%s\n", strings.Repeat("*", 25))
 }
 
+func (bc *Blockchain) CreateTransaction(sender string,
+	recipient string, value float32, senderPublicKey *ecdsa.PublicKey, s *utils.Signature) bool {
+	isTransacted := bc.AddTransaction(sender, recipient, value, senderPublicKey, s)
+
+	//TODO
+	return isTransacted
+}
+
 //トランザクション追加のメソッド
-func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32, senderPublicKey *ecdsa.PublicKey, s *utils.Signature) bool {
+func (bc *Blockchain) AddTransaction(sender string,
+	recipient string, value float32, senderPublicKey *ecdsa.PublicKey, s *utils.Signature) bool {
 	t := NewTransaction(sender, recipient, value)
 
 	//送り手がMINING_SENDERの場合検証は必要ないのでそのままtrueを返す
@@ -241,25 +241,34 @@ func (b *Block) Hash() [32]byte {
 	return sha256.Sum256([]byte(m))
 }
 
-//func init() {
-//	log.SetPrefix("Blockchain")
-//}
-//func main() {
-//	myBlockchainAddress := "my_blockchain_address"
-//	blockChain := NewBlockchain(myBlockchainAddress)
-//	blockChain.Print()
-//
-//	//AさんがBさんに1.0のvalueを送る
-//	blockChain.AddTransaction("A", "B", 1.0)
-//	//マイニング
-//	blockChain.Mining()
-//	blockChain.Print()
-//
-//	blockChain.AddTransaction("C", "D", 3.0)
-//	blockChain.Mining()
-//	blockChain.Print()
-//
-//	fmt.Printf("my %.1f\n", blockChain.CalculateTotalAmount("my_blockchain_address"))
-//	fmt.Printf("A %.1f\n", blockChain.CalculateTotalAmount("B"))
-//	fmt.Printf("C %.1f\n", blockChain.CalculateTotalAmount("D"))
-//}
+//jsonmarshalに変換
+func (t *Transaction) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Sender    string  `json:"sender_blockchain_address"`
+		Recipient string  `json:"recipient_blockchain_address"`
+		Value     float32 `json:"value"`
+	}{
+		Sender:    t.senderBlockchainAddress,
+		Recipient: t.recipientBlockchainAddress,
+		Value:     t.value,
+	})
+}
+
+type TransactionRequest struct {
+	SenderBlockchainAddress    *string  `json:"sender_blockchain_address"`
+	RecipientBlockchainAddress *string  `json:"recipient_blockchain_address"`
+	SenderPublicKey            *string  `json:"sender_public_key"`
+	Value                      *float32 `json:"value"`
+	Signature                  *string  `json:"signature"`
+}
+
+func (tr *TransactionRequest) Validate() bool {
+	if tr.SenderBlockchainAddress == nil ||
+		tr.RecipientBlockchainAddress == nil ||
+		tr.SenderPublicKey == nil ||
+		tr.Value == nil ||
+		tr.Signature == nil {
+		return false
+	}
+	return true
+}

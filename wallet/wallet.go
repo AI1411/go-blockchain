@@ -75,7 +75,7 @@ func (w *Wallet) PublicKey() *ecdsa.PublicKey {
 
 //publicKeyの文字列を取得
 func (w *Wallet) PublicKeyStr() string {
-	return fmt.Sprintf("%x%x", w.publicKey.X.Bytes(), w.publicKey.Y.Bytes())
+	return fmt.Sprintf("%064x%064x", w.publicKey.X.Bytes(), w.publicKey.Y.Bytes())
 }
 
 //ブロックチェーンアドレスを呼び出す
@@ -132,17 +132,17 @@ func (t *Transaction) MarshalJSON() ([]byte, error) {
 type TransactionRequest struct {
 	SenderPrivateKey           *string `json:"sender_private_key"`
 	SenderBlockchainAddress    *string `json:"sender_blockchain_address"`
-	RecipientBlockchainAddredd *string `json:"recipient_blockchain_address"`
+	RecipientBlockchainAddress *string `json:"recipient_blockchain_address"`
 	SenderPublicKey            *string `json:"sender_public_key"`
 	Value                      *string `json:"value"`
 }
 
 func (tr *TransactionRequest) Validate() bool {
-	if tr.SenderPrivateKey == nill ||
-		tr.SenderBlockchainAddress == nill ||
-		tr.RecipientBlockchainAddredd == nill ||
-		tr.SenderPublicKey == nill ||
-		tr.Value == nill {
+	if tr.SenderPrivateKey == nil ||
+		tr.SenderBlockchainAddress == nil ||
+		tr.RecipientBlockchainAddress == nil ||
+		tr.SenderPublicKey == nil ||
+		tr.Value == nil {
 		return false
 	}
 	return true
