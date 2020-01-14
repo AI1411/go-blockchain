@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9dab81a9-fe86-4c0f-989a-2d14972af460" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/neighbar.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/block/blockchain.go" beforeDir="false" afterPath="$PROJECT_DIR$/block/blockchain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain_server/blockchain_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain_server/blockchain_server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet/wallet.go" beforeDir="false" afterPath="$PROJECT_DIR$/wallet/wallet.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet_server/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/wallet_server/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet_server/wallet_server.go" beforeDir="false" afterPath="$PROJECT_DIR$/wallet_server/wallet_server.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,23 +48,44 @@
       <recent name="$PROJECT_DIR$/block" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build blockchain/wallet_server">
-    <configuration name="go build blockchain" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build blockchain/blockchain_server 5000">
+    <configuration name="go build blockchain/blockchain_server 5000" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="blockchain" />
       <working_directory value="$PROJECT_DIR$/" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/blockchain.go" />
-      <package value="blockchain" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build blockchain/blockchain_server" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="blockchain" />
-      <working_directory value="$PROJECT_DIR$/" />
+      <parameters value="-port 5000" />
       <kind value="PACKAGE" />
       <filePath value="$PROJECT_DIR$/blockchain_server/main.go" />
       <package value="blockchain/blockchain_server" />
       <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build blockchain/blockchain_server 5001" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="blockchain" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <parameters value="-port 5001" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/blockchain_server/main.go" />
+      <package value="blockchain/blockchain_server" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build blockchain/blockchain_server 5002" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="blockchain" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <parameters value="-port 5002" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/blockchain_server/main.go" />
+      <package value="blockchain/blockchain_server" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build blockchain/cmd" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="blockchain" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <kind value="DIRECTORY" />
+      <filePath value="$PROJECT_DIR$/wallet_server/main.go" />
+      <package value="blockchain/wallet_server" />
+      <directory value="$PROJECT_DIR$/cmd" />
       <method v="2" />
     </configuration>
     <configuration name="go build blockchain/wallet" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
@@ -79,27 +97,18 @@
       <directory value="$PROJECT_DIR$/wallet" />
       <method v="2" />
     </configuration>
-    <configuration name="go build blockchain/wallet_server" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="blockchain" />
-      <working_directory value="$PROJECT_DIR$/" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/wallet_server/main.go" />
-      <package value="blockchain/wallet_server" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Go Build.go build blockchain" />
-      <item itemvalue="Go Build.go build blockchain/blockchain_server" />
+      <item itemvalue="Go Build.go build blockchain/blockchain_server 5000" />
+      <item itemvalue="Go Build.go build blockchain/blockchain_server 5001" />
+      <item itemvalue="Go Build.go build blockchain/blockchain_server 5002" />
       <item itemvalue="Go Build.go build blockchain/wallet" />
-      <item itemvalue="Go Build.go build blockchain/wallet_server" />
+      <item itemvalue="Go Build.go build blockchain/cmd" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build blockchain/blockchain_server" />
-        <item itemvalue="Go Build.go build blockchain/wallet_server" />
+        <item itemvalue="Go Build.go build blockchain/blockchain_server 5000" />
+        <item itemvalue="Go Build.go build blockchain/cmd" />
         <item itemvalue="Go Build.go build blockchain/wallet" />
-        <item itemvalue="Go Build.go build blockchain" />
       </list>
     </recent_temporary>
   </component>
@@ -132,15 +141,16 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="-1496" y="261" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578721609405">
-      <screen x="-1920" y="58" width="1920" height="1080" />
+    <state x="1864" y="275" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1579009688589">
+      <screen x="1440" y="72" width="1920" height="1080" />
     </state>
     <state x="-1496" y="261" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578721609405" />
+    <state x="1864" y="275" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579009688589" />
     <state x="-1820" y="158" width="1720" height="880" key="DiffContextDialog" timestamp="1578735564443">
       <screen x="-1920" y="58" width="1920" height="1080" />
     </state>
     <state x="-1820" y="158" width="1720" height="880" key="DiffContextDialog/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578735564443" />
-    <state width="1878" height="258" key="GridCell.Tab.0.bottom" timestamp="1579005137712">
+    <state width="1878" height="258" key="GridCell.Tab.0.bottom" timestamp="1579009715078">
       <screen x="1440" y="72" width="1920" height="1080" />
     </state>
     <state width="1878" height="263" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578736673097" />
@@ -149,8 +159,8 @@
     <state width="1878" height="258" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579005137712" />
     <state width="1398" height="345" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1578621306710" />
     <state width="1878" height="263" key="GridCell.Tab.0.bottom/0.23.1440.877/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578735498881" />
-    <state width="1878" height="258" key="GridCell.Tab.0.bottom/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579004798878" />
-    <state width="1878" height="258" key="GridCell.Tab.0.center" timestamp="1579005137710">
+    <state width="1878" height="258" key="GridCell.Tab.0.bottom/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579009715078" />
+    <state width="1878" height="258" key="GridCell.Tab.0.center" timestamp="1579009715076">
       <screen x="1440" y="72" width="1920" height="1080" />
     </state>
     <state width="1878" height="263" key="GridCell.Tab.0.center/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578736673095" />
@@ -159,8 +169,8 @@
     <state width="1878" height="258" key="GridCell.Tab.0.center/0.0.1440.900/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579005137710" />
     <state width="1398" height="345" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1578621306709" />
     <state width="1878" height="263" key="GridCell.Tab.0.center/0.23.1440.877/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578735498880" />
-    <state width="1878" height="258" key="GridCell.Tab.0.center/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579004798877" />
-    <state width="1878" height="258" key="GridCell.Tab.0.left" timestamp="1579005137709">
+    <state width="1878" height="258" key="GridCell.Tab.0.center/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579009715076" />
+    <state width="1878" height="258" key="GridCell.Tab.0.left" timestamp="1579009715075">
       <screen x="1440" y="72" width="1920" height="1080" />
     </state>
     <state width="1878" height="263" key="GridCell.Tab.0.left/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578736673094" />
@@ -169,8 +179,8 @@
     <state width="1878" height="258" key="GridCell.Tab.0.left/0.0.1440.900/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579005137709" />
     <state width="1398" height="345" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1578621306709" />
     <state width="1878" height="263" key="GridCell.Tab.0.left/0.23.1440.877/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578735498878" />
-    <state width="1878" height="258" key="GridCell.Tab.0.left/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579004798876" />
-    <state width="1878" height="258" key="GridCell.Tab.0.right" timestamp="1579005137711">
+    <state width="1878" height="258" key="GridCell.Tab.0.left/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579009715075" />
+    <state width="1878" height="258" key="GridCell.Tab.0.right" timestamp="1579009715077">
       <screen x="1440" y="72" width="1920" height="1080" />
     </state>
     <state width="1878" height="263" key="GridCell.Tab.0.right/0.0.1440.900/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578736673096" />
@@ -179,7 +189,7 @@
     <state width="1878" height="258" key="GridCell.Tab.0.right/0.0.1440.900/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579005137711" />
     <state width="1398" height="345" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1578621306710" />
     <state width="1878" height="263" key="GridCell.Tab.0.right/0.23.1440.877/-1920.58.1920.1080@-1920.58.1920.1080" timestamp="1578735498880" />
-    <state width="1878" height="258" key="GridCell.Tab.0.right/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579004798878" />
+    <state width="1878" height="258" key="GridCell.Tab.0.right/0.23.1440.877/1440.72.1920.1080@1440.72.1920.1080" timestamp="1579009715077" />
     <state width="668" height="284" key="GridCell.Tab.1.bottom" timestamp="1578382859496">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
