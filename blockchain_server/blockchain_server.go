@@ -4,6 +4,7 @@ import (
 	"blockchain/block"
 	"blockchain/utils"
 	"blockchain/wallet"
+
 	"encoding/json"
 	"io"
 	"log"
@@ -143,6 +144,7 @@ func (bcs *BlockchainServer) StartMine(w http.ResponseWriter, req *http.Request)
 	}
 }
 
+//walletの合計を返すメソッド
 func (bcs *BlockchainServer) Amount(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodGet:
@@ -150,7 +152,7 @@ func (bcs *BlockchainServer) Amount(w http.ResponseWriter, req *http.Request) {
 		amount := bcs.GetBlockchain().CalculateTotalAmount(blockchainAddress)
 
 		ar := &block.AmountResponse{amount}
-		m,_ := ar.MarshalJSON()
+		m, _ := ar.MarshalJSON()
 
 		w.Header().Add("Content-Type", "application/json")
 		io.WriteString(w, string(m[:]))
