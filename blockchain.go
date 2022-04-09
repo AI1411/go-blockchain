@@ -2,27 +2,17 @@ package main
 
 import (
 	"blockchain/model"
-	"crypto/sha256"
-	"encoding/json"
 	"log"
 	"strings"
-	"time"
 )
-
-type Block struct {
-	nonce        int
-	previousHash [32]byte
-	timestamp    int64
-	transactions []*model.Transaction
-}
 
 type Blockchain struct {
 	transactionPool []*model.Transaction
-	chain           []*Block
+	chain           []*model.Block
 }
 
 func NewBlockchain() *Blockchain {
-	b := &Block{}
+	b := &model.Block{}
 	bc := &Blockchain{}
 	bc.CreateBlock(0, b.Hash())
 	return bc
@@ -36,49 +26,14 @@ func (bc *Blockchain) Print() {
 	log.Printf("%s\n", strings.Repeat("-", 25))
 }
 
-func (bc *Blockchain) CreateBlock(nonce int, previousHash [32]byte) *Block {
-	b := NewBlock(nonce, previousHash, bc.transactionPool)
+func (bc *Blockchain) CreateBlock(nonce int, previousHash [32]byte) *model.Block {
+	b := model.NewBlock(nonce, previousHash, bc.transactionPool)
 	bc.chain = append(bc.chain, b)
 	bc.transactionPool = []*model.Transaction{}
 	return b
 }
 
-func NewBlock(nonce int, previousHash [32]byte, transactions []*model.Transaction) *Block {
-	return &Block{
-		nonce:        nonce,
-		previousHash: previousHash,
-		timestamp:    time.Now().UnixNano(),
-		transactions: transactions,
-	}
-}
-
-func (b *Block) Print() {
-	log.Printf("Timestamp 		%d\n", b.timestamp)
-	log.Printf("Nonce 			%d\n", b.nonce)
-	log.Printf("Previous Hash 	%x\n", b.previousHash)
-	log.Printf("Transactions 	%s\n", b.transactions)
-}
-
-func (b *Block) Hash() [32]byte {
-	m, _ := json.Marshal(b)
-	return sha256.Sum256([]byte(m))
-}
-
-func (b *Block) MarshalJSON() ([]byte, error) {
-	return json.Marshal(struct {
-		Nonce        int                  `json:"nonce"`
-		PreviousHash [32]byte             `json:"previousHash"`
-		Timestamp    int64                `json:"timestamp"`
-		Transactions []*model.Transaction `json:"transactions"`
-	}{
-		Nonce:        b.nonce,
-		PreviousHash: b.previousHash,
-		Timestamp:    b.timestamp,
-		Transactions: b.transactions,
-	})
-}
-
-func (bc *Blockchain) LastBlock() *Block {
+func (bc *Blockchain) LastBlock() *model.Block {
 	return bc.chain[len(bc.chain)-1]
 }
 
