@@ -1,9 +1,12 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"strings"
 )
+
+const MiningDifficulty = 3
 
 type Blockchain struct {
 	TransactionPool []*Transaction
@@ -39,4 +42,32 @@ func (bc *Blockchain) LastBlock() *Block {
 func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32) {
 	t := NewTransaction(sender, recipient, value)
 	bc.TransactionPool = append(bc.TransactionPool, t)
+}
+
+func (bc *Blockchain) CopyTransactionPool() []*Transaction {
+	transactions := make([]*Transaction, len(bc.TransactionPool))
+	for _, t := range bc.TransactionPool {
+		transactions = append(transactions,
+			NewTransaction(t.SenderBlockchainAddress,
+				t.RecipientBlockchainAddress,
+				t.Value))
+	}
+	return transactions
+}
+
+func (bc Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions []*Transaction, difficulty int) bool {
+	zeros := strings.Repeat("0", difficulty)
+	guessBlock := Block{0, nonce, previousHash, transactions}
+	guessHashStr := fmt.Sprintf("%x", guessBlock.Hash())
+	return guessHashStr[:difficulty] == zeros
+}
+
+func (bc Blockchain) ProofOfWork() int {
+	transactions := bc.CopyTransactionPool()
+	previousHash := bc.LastBlock().Hash()
+	nonce := 0
+	for !bc.ValidProof(nonce, previousHash, transactions, MiningDifficulty) {
+		nonce += 1
+	}
+	return nonce
 }

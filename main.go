@@ -15,12 +15,14 @@ func main() {
 
 	blockchain.AddTransaction("Alice", "Bob", 5)
 	previousHash := blockchain.LastBlock().Hash()
-	blockchain.CreateBlock(5, previousHash)
+	nonce := blockchain.ProofOfWork()
+	blockchain.CreateBlock(nonce, previousHash)
 	blockchain.Print()
 
 	blockchain.AddTransaction("Bob", "Alice", 10)
 	blockchain.AddTransaction("Alice", "Bob", 15)
 	previousHash = blockchain.LastBlock().Hash()
-	blockchain.CreateBlock(10, previousHash)
+	nonce = blockchain.ProofOfWork()
+	blockchain.CreateBlock(nonce, previousHash)
 	blockchain.Print()
 }
