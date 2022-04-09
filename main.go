@@ -2,6 +2,7 @@ package main
 
 import (
 	"blockchain/model"
+	"fmt"
 	"log"
 )
 
@@ -14,12 +15,16 @@ func main() {
 	blockchain := model.NewBlockchain(myBlockchainAddress)
 	blockchain.Print()
 
-	blockchain.AddTransaction("Alice", "Bob", 5)
+	blockchain.AddTransaction("A", "B", 5)
 	blockchain.Mining()
 	blockchain.Print()
 
-	blockchain.AddTransaction("Bob", "Alice", 10)
-	blockchain.AddTransaction("Alice", "Bob", 15)
+	blockchain.AddTransaction("C", "D", 10)
+	blockchain.AddTransaction("X", "Y", 15)
 	blockchain.Mining()
 	blockchain.Print()
+
+	fmt.Printf("my %.1f\n", blockchain.CalculateTotalAmount("myBlockchainAddress"))
+	fmt.Printf("C %.1f\n", blockchain.CalculateTotalAmount("C"))
+	fmt.Printf("D %.1f\n", blockchain.CalculateTotalAmount("D"))
 }
