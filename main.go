@@ -10,19 +10,16 @@ func init() {
 }
 
 func main() {
-	blockchain := model.NewBlockchain()
+	myBlockchainAddress := "myBlockchainAddress"
+	blockchain := model.NewBlockchain(myBlockchainAddress)
 	blockchain.Print()
 
 	blockchain.AddTransaction("Alice", "Bob", 5)
-	previousHash := blockchain.LastBlock().Hash()
-	nonce := blockchain.ProofOfWork()
-	blockchain.CreateBlock(nonce, previousHash)
+	blockchain.Mining()
 	blockchain.Print()
 
 	blockchain.AddTransaction("Bob", "Alice", 10)
 	blockchain.AddTransaction("Alice", "Bob", 15)
-	previousHash = blockchain.LastBlock().Hash()
-	nonce = blockchain.ProofOfWork()
-	blockchain.CreateBlock(nonce, previousHash)
+	blockchain.Mining()
 	blockchain.Print()
 }
